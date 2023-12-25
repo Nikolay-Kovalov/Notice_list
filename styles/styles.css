@@ -85,6 +85,7 @@ p {
     max-width: 100%;
     word-wrap: break-word;
     font-size: 20px;
+    margin-bottom: 16px;
 }
 
 .linethrough {
@@ -99,7 +100,7 @@ p {
 }
 
 .deleteBtn {
-    width: 280px;
+    width: 100%;
     height: 48px;
     font-size: 16px;
     background-color: red;
@@ -301,6 +302,7 @@ p {
         max-width: 100%;
         word-wrap: break-word;
         font-size: 20px;
+
     }
 
     .deleteBtn {

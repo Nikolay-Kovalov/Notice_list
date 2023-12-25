@@ -31,14 +31,13 @@ function renderSavedTasks() {
     <div class="taskBtnWrapper">
     <button class="deleteBtn">Удалить</button>
     </div>`
-    if (item.done) {
-        li.firstElementChild.classList.add('linethrough');
-        li.lastElementChild.lastElementChild.classList.add('disabled')
-        }
+    // if (item.done) {
+    //     li.firstElementChild.classList.add('linethrough');
+    //     li.lastElementChild.lastElementChild.classList.add('disabled')
+    //     }
         toDoList.appendChild(li) 
 
         i += 1
-    
     });
 }
 
@@ -59,7 +58,6 @@ function addTask() {
     li.innerHTML = `<p data-id = ${i} class="text">${text}</p>
     <div class="taskBtnWrapper">
     <button class="deleteBtn">Удалить</button>
-    <button class="editBtn">Редактировать</button>
     </div>`
 
     toDoList.appendChild(li)
