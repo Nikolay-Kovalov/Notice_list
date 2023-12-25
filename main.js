@@ -5,8 +5,17 @@ const toDoInput = document.getElementById('toDoInput');
 
 addTaskBtn.addEventListener('click', addTask);
 toDoList.addEventListener('click', deleteTask);
-// toDoList.addEventListener('click', openEditWindow);
 toDoList.addEventListener('click', makeTaskDone);
+
+
+    document.addEventListener('keydown', onEnterPress)
+
+
+function onEnterPress(evt) {
+    if (evt.code === "Enter") {
+        addTask();
+    }
+}
 
 
 let i = 1 ;
@@ -16,7 +25,7 @@ function getFromLS(key) {
     return JSON.parse(savedData)
 }
 
-const tasks = getFromLS('myTasks') || [];
+const tasks = getFromLS('myNotices') || [];
 console.log(tasks)
     
 function renderSavedTasks() {
@@ -43,7 +52,7 @@ function renderSavedTasks() {
 
 renderSavedTasks()
 
-let taskArr =  getFromLS('myTasks') || []; 
+let taskArr =  getFromLS('myNotices') || []; 
 console.log(taskArr)
 
 function addTask() {
@@ -65,11 +74,11 @@ function addTask() {
 
         const task = {
         task: text,
-            id: i,
+        id: i,
         done: false,
     }
     taskArr.push(task)
-        localStorage.setItem('myTasks',JSON.stringify(taskArr) )
+        localStorage.setItem('myNotices',JSON.stringify(taskArr) )
     console.log(task)
     console.log(taskArr)
     i+=1
@@ -84,55 +93,27 @@ return item.id !== Number(evt.target.closest('li').firstElementChild.dataset.id)
         console.log(evt.target.closest('li').firstElementChild.dataset.id)
         console.log(taskArr)
         evt.target.closest('li').remove()
-        localStorage.setItem('myTasks',JSON.stringify(taskArr) )
+        localStorage.setItem('myNotices',JSON.stringify(taskArr) )
 
     }
 }
 
 let textId = null;
 
-// function openEditWindow(evt) {
-//     const textToEdit = evt.target.closest('li').firstElementChild.textContent
-//     textId = evt.target.closest('li').firstElementChild.dataset.id
 
-//     if (evt.target.classList.contains("editBtn")) {
-//         const backDrop = document.createElement('div');
-//         backDrop.classList.add('backdrop');
-
-
-//         const modal = document.createElement('div');
-//         modal.innerHTML = `
-//     <button class="modalEditBtn">Редактировать</button>
-// `
-//         const textArea = document.createElement('textarea');
-//         textArea.cols = "30";
-//         textArea.rows = "10";
-//         textArea.classList.add('textarea');
-//         textArea.textContent = textToEdit;
-//         modal.prepend(textArea)
-//         modal.classList.add('modal');
-
-//         backDrop.appendChild(modal);
-//         document.body.appendChild(backDrop);
-//         document.querySelector(".modalEditBtn").addEventListener('click', editTask)
-//         document.body.classList.add('open');
-//         backDrop.addEventListener('click', onBackdropClick)
-//         document.body.addEventListener('keydown', onEscPress)
-//     }
-
-// }
-
-function editTask() {
-    document.querySelector(`[data-id = "${textId}"`).textContent = document.querySelector('.textarea').value
-    document.querySelector('.backdrop').remove()
-    document.body.classList.remove('open');
-    console.log(  document.querySelector(`[data-id = "${textId}"`))
+function editTask(evt) {
+    textId = evt.closest('li').firstElementChild.dataset.id
+    console.log(textId)
+    // document.querySelector(`[data-id = "${textId}"`).textContent = document.querySelector('.textarea').value
+    // document.querySelector('.backdrop').remove()
+    // document.body.classList.remove('open');
+    // console.log(  document.querySelector(`[data-id = "${textId}"`))
     taskArr.forEach(item => {
         if (item.id === Number(document.querySelector(`[data-id = "${textId}"`).dataset.id)) {
-                       console.log(item.id);
+            console.log(item.id);
         console.log(Number(document.querySelector(`[data-id = "${textId}"`).dataset.id))
-            item.task =   document.querySelector(`[data-id = "${textId}"`).textContent
-            localStorage.setItem('myTasks',JSON.stringify(taskArr) )
+            item.task =   document.querySelector(`[data-id = "${textId}"`).value
+            localStorage.setItem('myNotices',JSON.stringify(taskArr) )
         }
  
     })
@@ -192,6 +173,7 @@ function makeTaskDone(evt) {
         textarea.cols = 30;
         textarea.rows = 5;
         textarea.value = evt.target.textContent;
+        textarea.dataset.id = evt.target.dataset.id
         evt.target.replaceWith(textarea);
             textarea.focus();
         textarea.addEventListener('focusout', onFocusOut)
@@ -207,10 +189,25 @@ function makeTaskDone(evt) {
 
 function onFocusOut(evt) {
     if (!evt.currentTarget.value) {
+        taskArr = taskArr.filter(item => {
+    console.log(item.id)
+return item.id !== Number(evt.target.closest('li').firstElementChild.dataset.id)
+     })
+        console.log(evt.target.closest('li').firstElementChild.dataset.id)
+        console.log(taskArr)
+        evt.target.closest('li').remove()
+        localStorage.setItem('myNotices',JSON.stringify(taskArr) )
         evt.currentTarget.closest('li').remove();
-    }
-    const text = document.createElement('p');
+       
+    } else {
+           const text = document.createElement('p');
     text.classList.add('text');
+    text.dataset.id = evt.currentTarget.dataset.id;
     text.textContent = evt.currentTarget.value
-    evt.currentTarget.replaceWith(text)
+    editTask(evt.currentTarget);
+    evt.currentTarget.replaceWith(text);
+    }
+ 
+
+
 }
